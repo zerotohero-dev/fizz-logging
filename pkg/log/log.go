@@ -19,6 +19,7 @@ import (
 )
 
 var writer *syslog.Writer
+var environment env.FizzEnv
 
 func Init(appName string) *syslog.Writer {
 	e := env.New()
@@ -26,6 +27,11 @@ func Init(appName string) *syslog.Writer {
 	e.SanitizeLog()
 
 	dest := e.Log.Destination
+
+	// Don’t use Syslog if logging to stdOut is forced.
+	if e.Log.UseStdOut {
+		return nil
+	}
 
 	w, err := syslog.Dial("udp", dest, syslog.LOG_INFO|syslog.LOG_USER, appName)
 	if err != nil {
@@ -39,7 +45,7 @@ func Init(appName string) *syslog.Writer {
 }
 
 func Info(s string, args ...interface{}) {
-	if writer == nil {
+	if environment.Log.UseStdOut || writer == nil {
 		log.Printf(s, args...)
 		return
 	}
@@ -48,7 +54,7 @@ func Info(s string, args ...interface{}) {
 }
 
 func Err(s string, args ...interface{}) {
-	if writer == nil {
+	if environment.Log.UseStdOut || writer == nil {
 		log.Printf(s, args...)
 		return
 	}
@@ -57,7 +63,7 @@ func Err(s string, args ...interface{}) {
 }
 
 func Warning(s string, args ...interface{}) {
-	if writer == nil {
+	if environment.Log.UseStdOut || writer == nil {
 		log.Printf(s, args...)
 		return
 	}
