@@ -29,7 +29,7 @@ func Init(appName string) *syslog.Writer {
 	dest := e.Log.Destination
 
 	// Don’t use Syslog if logging to stdOut is forced.
-	if e.Log.UseStdOut {
+	if e.Deployment.Type == env.Development {
 		return nil
 	}
 
