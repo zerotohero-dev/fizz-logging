@@ -45,7 +45,7 @@ func Init(appName string) *syslog.Writer {
 }
 
 func Info(s string, args ...interface{}) {
-	if environment.Log.UseStdOut || writer == nil {
+	if environment.Deployment.Type == env.Development || writer == nil {
 		log.Printf(s, args...)
 		return
 	}
@@ -54,7 +54,7 @@ func Info(s string, args ...interface{}) {
 }
 
 func Err(s string, args ...interface{}) {
-	if environment.Log.UseStdOut || writer == nil {
+	if environment.Deployment.Type == env.Development || writer == nil {
 		log.Printf(s, args...)
 		return
 	}
@@ -63,7 +63,7 @@ func Err(s string, args ...interface{}) {
 }
 
 func Warning(s string, args ...interface{}) {
-	if environment.Log.UseStdOut || writer == nil {
+	if environment.Deployment.Type == env.Development || writer == nil {
 		log.Printf(s, args...)
 		return
 	}
