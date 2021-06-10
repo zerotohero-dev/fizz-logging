@@ -21,15 +21,17 @@ import (
 var writer *syslog.Writer
 var environment env.FizzEnv
 
-func Init(appName string) *syslog.Writer {
-	e := env.New()
+func isDevelopment(deploymentType env.DeploymentType) bool {
+	return deploymentType == env.Development
+}
 
+func Init(e env.FizzEnv, appName string) *syslog.Writer {
 	e.SanitizeLog()
 
 	dest := e.Log.Destination
 
-	// Don’t use Syslog if logging to stdOut is forced.
-	if e.Deployment.Type == env.Development {
+	// Don’t log to Syslog in development mode.
+	if isDevelopment(e.Deployment.Type) {
 		return nil
 	}
 
