@@ -10,3 +10,5 @@ github.com/zerotohero-dev/fizz-env v0.1.6 h1:8x//KTJZ8dLWPLrB8Pb94cN4sczbi7wzmyK
 github.com/zerotohero-dev/fizz-env v0.1.6/go.mod h1:FPXQfRJ46qdmUXBaeanHg1dgx/wK2vJEmH/dTRr10tk=
 github.com/zerotohero-dev/fizz-env v0.1.9 h1:otFvJ2I3Qg3tA8NFNiToL/SnGZVpCchNb2tsJoTnZFQ=
 github.com/zerotohero-dev/fizz-env v0.1.9/go.mod h1:FPXQfRJ46qdmUXBaeanHg1dgx/wK2vJEmH/dTRr10tk=
+github.com/zerotohero-dev/fizz-env v0.1.13 h1:LZhbODpATgc9Vyqz1TIVsAGhwlE8CyWm2rnddBsv8/c=
+github.com/zerotohero-dev/fizz-env v0.1.13/go.mod h1:FPXQfRJ46qdmUXBaeanHg1dgx/wK2vJEmH/dTRr10tk=

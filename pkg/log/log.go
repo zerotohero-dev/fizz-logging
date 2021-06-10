@@ -21,9 +21,7 @@ import (
 var writer *syslog.Writer
 var environment env.FizzEnv
 
-func isDevelopment(deploymentType env.DeploymentType) bool {
-	return deploymentType == env.Development
-}
+
 
 func Init(e env.FizzEnv, appName string) *syslog.Writer {
 	e.SanitizeLog()
@@ -31,7 +29,7 @@ func Init(e env.FizzEnv, appName string) *syslog.Writer {
 	dest := e.Log.Destination
 
 	// Don’t log to Syslog in development mode.
-	if isDevelopment(e.Deployment.Type) {
+	if e.IsDevelopment() {
 		return nil
 	}
 
