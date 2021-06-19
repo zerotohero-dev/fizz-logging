@@ -24,7 +24,7 @@ var environment env.FizzEnv
 
 
 func Init(e env.FizzEnv, appName string) *syslog.Writer {
-	e.SanitizeLog()
+	e.Log.Sanitize()
 
 	dest := e.Log.Destination
 
