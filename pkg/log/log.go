@@ -1,7 +1,7 @@
 /*
  *  \
  *  \\,
- *   \\\,^,.,,.                    “Zero to Hero”
+ *   \\\,^,.,,.                     Zero to Hero
  *   ,;7~((\))`;;,,               <zerotohero.dev>
  *   ,(@') ;)`))\;;',    stay up to date, be curious: learn
  *    )  . ),((  ))\;,
@@ -16,6 +16,7 @@ import (
 	"github.com/zerotohero-dev/fizz-env/pkg/env"
 	"log"
 	"log/syslog"
+	"strings"
 )
 
 var writer *syslog.Writer
@@ -73,4 +74,40 @@ func Warning(s string, args ...interface{}) {
 
 func Fatal(e interface{}) {
 	log.Fatal(e)
+}
+
+func RedactEmail(e string) string {
+	if len(e) == 0 {
+		return ""
+	}
+
+	notAValidEmail := strings.Index(e, "@") == -1
+	if  notAValidEmail {
+		return ""
+	}
+
+	parts := strings.Split(e, "@")
+
+	if len(parts) < 2 {
+		return ""
+	}
+
+	firstPart := parts[0]
+	lastPart := parts[1]
+	firstPartRedacted := "..."
+	lastPartRedacted := "..."
+
+	if len(firstPart) > 5 {
+		firstPartRedacted = firstPart[0:2] + "..." + firstPart[len(firstPart)-2:]
+	} else {
+		firstPartRedacted = firstPart[0:1] + "..."
+	}
+
+	if len(lastPart) > 4 {
+		lastPartRedacted = lastPart[0:1] + "..." + lastPart[len(lastPart)-2:]
+	} else {
+		lastPartRedacted = lastPart[0:1] + "..."
+	}
+
+	return firstPartRedacted + "@" + lastPartRedacted
 }
