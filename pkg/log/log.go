@@ -13,28 +13,31 @@ package log
 
 import (
 	"fmt"
-	"github.com/zerotohero-dev/fizz-env/pkg/env"
 	"log"
 	"log/syslog"
 	"strings"
 )
 
 var writer *syslog.Writer
-var environment env.FizzEnv
 
+type InitParams struct {
+	IsDevEnv       bool
+	LogDestination string
+	SanitizeFn     func()
+	AppName        string
+}
 
+func Init(params InitParams) *syslog.Writer {
+	params.SanitizeFn()
 
-func Init(e env.FizzEnv, appName string) *syslog.Writer {
-	e.Log.Sanitize()
-
-	dest := e.Log.Destination
+	dest := params.LogDestination
 
 	// Don’t log to Syslog in development mode.
-	if e.IsDevelopment() {
+	if params.IsDevEnv {
 		return nil
 	}
 
-	w, err := syslog.Dial("udp", dest, syslog.LOG_INFO|syslog.LOG_USER, appName)
+	w, err := syslog.Dial("udp", dest, syslog.LOG_INFO|syslog.LOG_USER, params.AppName)
 	if err != nil {
 		Info("failed to dial syslog for log destination '" + dest + "'.")
 		return nil
@@ -46,7 +49,7 @@ func Init(e env.FizzEnv, appName string) *syslog.Writer {
 }
 
 func Info(s string, args ...interface{}) {
-	if environment.Deployment.Type == env.Development || writer == nil {
+	if writer == nil {
 		log.Printf(s, args...)
 		return
 	}
@@ -55,7 +58,7 @@ func Info(s string, args ...interface{}) {
 }
 
 func Err(s string, args ...interface{}) {
-	if environment.Deployment.Type == env.Development || writer == nil {
+	if writer == nil {
 		log.Printf(s, args...)
 		return
 	}
@@ -64,7 +67,7 @@ func Err(s string, args ...interface{}) {
 }
 
 func Warning(s string, args ...interface{}) {
-	if environment.Deployment.Type == env.Development || writer == nil {
+	if writer == nil {
 		log.Printf(s, args...)
 		return
 	}
@@ -82,7 +85,7 @@ func RedactEmail(e string) string {
 	}
 
 	notAValidEmail := strings.Index(e, "@") == -1
-	if  notAValidEmail {
+	if notAValidEmail {
 		return ""
 	}
 
